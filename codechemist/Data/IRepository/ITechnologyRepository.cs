@@ -6,13 +6,13 @@ namespace codechemist.Data.IRepository
 {
     public interface ITechnologyRepository
     {
-        Task<IEnumerable<Technology>> GetAllAsync();
-        Task<Technology> GetByIdAsync(int id);
+        Task<IEnumerable<TechnologyLessonVM>> GetAllAsync();
+        Task<TechnologyLessonVM> GetByIdAsync(int id);
 
         Task AddAsync(TechnologyVM data);
 
         Task DeleteByIdAsync(int id);
 
-        //    Task<Technology> UpdateByIdAsync(int id, Technology data);
+        Task<Technology> UpdateByIdAsync(int id, TechnologyVM data);
     }
 }

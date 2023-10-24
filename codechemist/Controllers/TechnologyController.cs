@@ -46,25 +46,25 @@ namespace codechemist.Controllers
         public async Task<IActionResult> AddASync([FromForm] TechnologyVM data)
         {
 
-            // if (!ModelState.IsValid) return View(data);
+            //  if (!ModelState.IsValid) return View(data);
             await _technologyRepository.AddAsync(data);
 
 
             return Ok(data);
         }
 
-        /*
+
         [HttpPut("{id}")]
 
-        public async Task<IActionResult> UpdateByIdAsync(int id, [FromForm][FromBody] ContentVM data)
+        public async Task<IActionResult> UpdateByIdAsync(int id, [FromForm][FromBody] TechnologyVM data)
         {
-            var _data = await _contentRepository.UpdateByIdAsync(id, data);
+            var _data = await _technologyRepository.UpdateByIdAsync(id, data);
 
             return Ok(_data);
 
         }
 
-        */
+
 
 
         [HttpDelete("{id}")]

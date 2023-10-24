@@ -51,6 +51,11 @@ builder.Services.AddScoped<ITechnologyRepository, TechnologyService>();
 builder.Services.AddScoped<ILessonRepository, LessonService>();
 builder.Services.AddScoped<ISubjectRepository, SubjectService>();
 builder.Services.AddScoped<IPhotoRepository, PhotoService>();
+builder.Services.AddScoped<IVideoRepository, VideoService>();
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 512 * 1024 * 1024;
+});
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -85,8 +90,8 @@ builder.Services.AddIdentityCore<User>(option =>
     .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
-await AppInitializer.Seed(app);
-//await AppInitializer.SeedUserManager(app);
+//await AppInitializer.Seed(app);
+await AppInitializer.SeedUserManager(app);
 
 app.UseCors(builder =>
 {

@@ -5,5 +5,6 @@
 
 
         public string Title { get; set; }
+        public int TechnologyId { get; set; }
     }
 }

@@ -35,16 +35,7 @@ namespace codechemist.Data.Services
             await _appDbContext.Technologys.AddAsync(_data);
             await _appDbContext.SaveChangesAsync();
 
-            /*  foreach (var id in data.CreatorIds)
-               {
-                   var _data_creator = new Content_Creator()
-                   {
-                       ContentId = _data.Id,
-                       CreatorId = id,
-                   };
-                   await _appDbContext.Content_Creators.AddAsync(_data_creator);
-                   await _appDbContext.SaveChangesAsync();
-               }    */
+
 
         }
 
@@ -67,51 +58,79 @@ namespace codechemist.Data.Services
 
         }
 
-        public async Task<IEnumerable<Technology>> GetAllAsync()
+        public async Task<IEnumerable<TechnologyLessonVM>> GetAllAsync()
         {
-            var _data = await _appDbContext.Technologys.ToListAsync();
+            var _data = await _appDbContext.Technologys
+                .Select(n => new TechnologyLessonVM()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Image = n.Image,
+                    TechnologyLessons = n.Lessons.Select(n => new TechnologyLessonSubjectVM()
+                    {
+                        Id = n.Id,
+                        Title = n.Title,
+                        LessonSubjects = n.Subjects.Select(n => new TechnologySubjectVM()
+                        {
+                            Id = n.Id,
+                            Title = n.Title,
+                            Content = n.Content
+                        }).ToList()
+                    }).ToList()
+                }).ToListAsync();
             return _data;
 
         }
 
-        public async Task<Technology> GetByIdAsync(int id)
+        public async Task<TechnologyLessonVM> GetByIdAsync(int id)
+        {
+            var _data = await _appDbContext.Technologys.Where(i => i.Id == id)
+                .Select(n => new TechnologyLessonVM()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Image = n.Image,
+                    TechnologyLessons = n.Lessons.Select(n => new TechnologyLessonSubjectVM()
+                    {
+                        Title = n.Title,
+                        LessonSubjects = n.Subjects.Select(n => new TechnologySubjectVM()
+                        {
+                            Id = n.Id,
+                            Title = n.Title,
+                            Content = n.Content
+                        }).ToList()
+                    }).ToList()
+                }).FirstAsync();
+
+            return _data;
+        }
+
+        public async Task<Technology> UpdateByIdAsync(int id, TechnologyVM data)
         {
             var _data = await _appDbContext.Technologys.FirstOrDefaultAsync(i => i.Id == id);
+            var resultPhoto = await _photoRepository.AddPhotoAsync(data.Image);
+
+            if (!string.IsNullOrEmpty(_data.PublicId))
+            {
+                await _photoRepository.DeletePhotoAsync(_data.PublicId);
+            }
+
+            if (_data != null)
+            {
+                _data.Title = data.Title;
+                _data.Image = resultPhoto.Url.ToString();
+                _data.PublicId = resultPhoto.PublicId;
+
+
+
+                await _appDbContext.SaveChangesAsync();
+            }
+
 
             return _data;
+
+
         }
-
-        /*   public async Task<Content> UpdateByIdAsync(int id, ContentVM data)
-           {
-               var _data = await _appDbContext.Contents.FirstOrDefaultAsync(i => i.Id == id);
-               var resultPhoto = await _photoRepository.AddPhotoAsync(data.CoverImageURl);
-               var resultAudio = await _photoRepository.AddAudioAsync(data.AudioPlayerURL);
-
-               if (!string.IsNullOrEmpty(_data.PublicId))
-               {
-                   await _photoRepository.DeletePhotoAsync(_data.PublicId);
-               }
-
-               if (_data != null)
-               {
-                   _data.Title = data.Title;
-                   _data.CoverImageURl = resultPhoto.Url.ToString();
-                   _data.AudioPlayerURL = resultAudio.Url.ToString();
-                   _data.Gengre = data.Gengre;
-                   _data.Description = data.Description;
-                   _data.PublicId = resultPhoto.PublicId;
-                   _data.PublicId = resultAudio.PublicId;
-
-
-
-                   await _appDbContext.SaveChangesAsync();
-               }
-
-
-               return _data;
-
-
-           }*/
 
     }
 }

@@ -12,6 +12,6 @@ namespace codechemist.Data.IRepository
 
         Task DeleteByIdAsync(int id);
 
-        //  Task<Technology> UpdateByIdAsync(int id, Lesson data);
+        Task<Lesson> UpdateByIdAsync(int id, LessonVM data);
     }
 }

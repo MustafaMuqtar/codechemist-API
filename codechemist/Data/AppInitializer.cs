@@ -105,7 +105,7 @@ namespace codechemist.Data
                         {
                             Title = "Hur man skapar ett Javascript project",
                             Content= "https://drive.google.com/file/d/1gma4xeP2_fUYex_GZ_1iPz-ZhbEkSV4k/view?usp=sharing",
-                            LessonId=4
+                            LessonId=1
                         },
 
                     });

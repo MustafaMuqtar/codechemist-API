@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace codechemist.Migrations
 {
     /// <inheritdoc />
-    public partial class databaseAdded : Migration
+    public partial class redoneMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,7 +59,8 @@ namespace codechemist.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublicId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -177,6 +180,7 @@ namespace codechemist.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublicId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TechnologyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -198,6 +202,7 @@ namespace codechemist.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublicId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LessonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -209,6 +214,15 @@ namespace codechemist.Migrations
                         principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "300ad9c2-5da4-4a12-87d4-fb25d598c2bb", null, "Member", "MEMBER" },
+                    { "e265a3ea-dc38-4b7a-934d-124d3662d12e", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

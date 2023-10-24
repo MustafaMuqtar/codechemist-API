@@ -54,18 +54,18 @@ namespace codechemist.Controllers
             return Ok(data);
         }
 
-        /*
+
         [HttpPut("{id}")]
 
-        public async Task<IActionResult> UpdateByIdAsync(int id, [FromForm][FromBody] ContentVM data)
+        public async Task<IActionResult> UpdateByIdAsync(int id, [FromForm][FromBody] LessonVM data)
         {
-            var _data = await _contentRepository.UpdateByIdAsync(id, data);
+            var _data = await _lessonRepository.UpdateByIdAsync(id, data);
 
             return Ok(_data);
 
         }
 
-        */
+
 
 
         [HttpDelete("{id}")]

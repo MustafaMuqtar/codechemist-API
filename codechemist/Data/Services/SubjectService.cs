@@ -19,12 +19,13 @@ namespace codechemist.Data.Services
 
         public async Task AddAsync(SubjectVM data)
         {
-            var resultPhoto = await _photoRepository.AddPhotoAsync(data.Content);
+            var resultPhoto = await _photoRepository.AddAudioAsync(data.Content);
 
             var _data = new Subject()
             {
                 Title = data.Title,
                 Content = resultPhoto.Url.ToString(),
+                LessonId = data.LessonId
 
 
 
@@ -32,17 +33,6 @@ namespace codechemist.Data.Services
             _data.PublicId = resultPhoto.PublicId;
             await _appDbContext.Subjects.AddAsync(_data);
             await _appDbContext.SaveChangesAsync();
-
-            /*  foreach (var id in data.CreatorIds)
-               {
-                   var _data_creator = new Content_Creator()
-                   {
-                       ContentId = _data.Id,
-                       CreatorId = id,
-                   };
-                   await _appDbContext.Content_Creators.AddAsync(_data_creator);
-                   await _appDbContext.SaveChangesAsync();
-               }    */
 
         }
 
@@ -79,37 +69,30 @@ namespace codechemist.Data.Services
             return _data;
         }
 
-        /*   public async Task<Content> UpdateByIdAsync(int id, ContentVM data)
-           {
-               var _data = await _appDbContext.Contents.FirstOrDefaultAsync(i => i.Id == id);
-               var resultPhoto = await _photoRepository.AddPhotoAsync(data.CoverImageURl);
-               var resultAudio = await _photoRepository.AddAudioAsync(data.AudioPlayerURL);
+        public async Task<Subject> UpdateByIdAsync(int id, SubjectVM data)
+        {
+            var _data = await _appDbContext.Subjects.FirstOrDefaultAsync(i => i.Id == id);
+            var resultPhoto = await _photoRepository.AddAudioAsync(data.Content);
 
-               if (!string.IsNullOrEmpty(_data.PublicId))
-               {
-                   await _photoRepository.DeletePhotoAsync(_data.PublicId);
-               }
+            if (!string.IsNullOrEmpty(_data.PublicId))
+            {
+                await _photoRepository.DeletePhotoAsync(_data.PublicId);
+            }
 
-               if (_data != null)
-               {
-                   _data.Title = data.Title;
-                   _data.CoverImageURl = resultPhoto.Url.ToString();
-                   _data.AudioPlayerURL = resultAudio.Url.ToString();
-                   _data.Gengre = data.Gengre;
-                   _data.Description = data.Description;
-                   _data.PublicId = resultPhoto.PublicId;
-                   _data.PublicId = resultAudio.PublicId;
+            if (_data != null)
+            {
+                _data.Title = data.Title;
+                _data.Content = resultPhoto.Url.ToString();
+                _data.LessonId = data.LessonId;
+
+                await _appDbContext.SaveChangesAsync();
+            }
 
 
-
-                   await _appDbContext.SaveChangesAsync();
-               }
+            return _data;
 
 
-               return _data;
-
-
-           }*/
+        }
 
     }
 }
