@@ -12,8 +12,8 @@ using codechemist.Data;
 namespace codechemist.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231021145446_redoneMigration")]
-    partial class redoneMigration
+    [Migration("20231029204134_createdAzureConnection")]
+    partial class createdAzureConnection
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,13 @@ namespace codechemist.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "300ad9c2-5da4-4a12-87d4-fb25d598c2bb",
+                            Id = "67235619-fc42-445e-98a0-77ab7e0cdf80",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "e265a3ea-dc38-4b7a-934d-124d3662d12e",
+                            Id = "2ca78e57-4666-4d80-ac9b-4f8a5d3c6530",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

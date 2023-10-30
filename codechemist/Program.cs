@@ -91,7 +91,7 @@ builder.Services.AddIdentityCore<User>(option =>
 
 var app = builder.Build();
 //await AppInitializer.Seed(app);
-await AppInitializer.SeedUserManager(app);
+//await AppInitializer.SeedUserManager(app);
 
 app.UseCors(builder =>
 {
