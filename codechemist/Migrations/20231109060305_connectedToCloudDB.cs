@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace codechemist.Migrations
 {
     /// <inheritdoc />
-    public partial class azure : Migration
+    public partial class connectedToCloudDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -221,8 +221,8 @@ namespace codechemist.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "526c6238-aea9-4a60-9d82-ea0c3cd2e74e", null, "Admin", "ADMIN" },
-                    { "972bc687-f486-4618-92e9-9aa21e464d26", null, "Member", "MEMBER" }
+                    { "1f02824c-b910-4ab6-a466-c434639c4556", null, "Admin", "ADMIN" },
+                    { "26591446-65b2-437f-9333-c08808bda4d0", null, "Member", "MEMBER" }
                 });
 
             migrationBuilder.CreateIndex(
