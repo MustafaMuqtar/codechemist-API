@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using codechemist.Data.IRepository;
 using codechemist.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace codechemist.Controllers
 {
@@ -42,7 +43,7 @@ namespace codechemist.Controllers
             return Ok(_data);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddASync([FromForm] LessonVM data)
         {

@@ -10,6 +10,7 @@ using codechemist.Data;
 using codechemist.Data.Extentions;
 using codechemist.Data.IRepository;
 using System.Text;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,13 +51,16 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<ITechnologyRepository, TechnologyService>();
 builder.Services.AddScoped<ILessonRepository, LessonService>();
 builder.Services.AddScoped<ISubjectRepository, SubjectService>();
+builder.Services.AddScoped<IExerciseRepository, ExerciseService>();
 builder.Services.AddScoped<IPhotoRepository, PhotoService>();
-builder.Services.AddScoped<IVideoRepository, VideoService>();
-builder.WebHost.ConfigureKestrel(options =>
+builder.Services.AddScoped<IFIleRepository, FIleService>();
+builder.Services.Configure<FormOptions>(options =>
 {
-    options.Limits.MaxRequestBodySize = 512 * 1024 * 1024;
+    options.MultipartBodyLengthLimit = 512 * 1024 * 1024;
 });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -89,9 +93,10 @@ builder.Services.AddIdentityCore<User>(option =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
+
 var app = builder.Build();
 //await AppInitializer.Seed(app);
-//await AppInitializer.SeedUserManager(app);
+await AppInitializer.SeedUserManager(app);
 
 app.UseCors(builder =>
 {
@@ -103,6 +108,9 @@ app.UseCors(builder =>
 
 
 // Configure the HTTP request pipeline.
+
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -112,6 +120,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+//app.UseDefaultFiles();
+
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

@@ -6,7 +6,6 @@ namespace codechemist.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string? PublicId { get; set; }
 
 
         public List<Subject> Subjects { get; set; }

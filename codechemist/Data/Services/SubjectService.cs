@@ -8,29 +8,28 @@ namespace codechemist.Data.Services
     public class SubjectService : ISubjectRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IPhotoRepository _photoRepository;
+        private readonly IFIleRepository _fIleRepository;
 
-        public SubjectService(AppDbContext appDbContext, IPhotoRepository photoRepository)
+        public SubjectService(AppDbContext appDbContext, IFIleRepository fIleRepository)
         {
             _appDbContext = appDbContext;
-            _photoRepository = photoRepository;
+            _fIleRepository = fIleRepository;
 
         }
 
         public async Task AddAsync(SubjectVM data)
         {
-            var resultPhoto = await _photoRepository.AddAudioAsync(data.Content);
+            var file = await _fIleRepository.UploadVideo(data.Content);
 
             var _data = new Subject()
             {
                 Title = data.Title,
-                Content = resultPhoto.Url.ToString(),
+                Content = file.ToString(),
                 LessonId = data.LessonId
 
 
 
             };
-            _data.PublicId = resultPhoto.PublicId;
             await _appDbContext.Subjects.AddAsync(_data);
             await _appDbContext.SaveChangesAsync();
 
@@ -38,15 +37,15 @@ namespace codechemist.Data.Services
 
         public async Task DeleteByIdAsync(int id)
         {
+            string directory = "/Uploads/Videos/";
+
             var _data = await _appDbContext.Subjects.FirstOrDefaultAsync(i => i.Id == id);
+            _fIleRepository.RemoveFile(_data.Content, directory);
 
             if (_data != null)
             {
 
-                if (!string.IsNullOrEmpty(_data.PublicId))
-                {
-                    await _photoRepository.DeletePhotoAsync(_data.PublicId);
-                }
+
                 _appDbContext.Subjects.Remove(_data);
                 await _appDbContext.SaveChangesAsync();
 
@@ -57,10 +56,13 @@ namespace codechemist.Data.Services
 
         public async Task<IEnumerable<Subject>> GetAllAsync()
         {
-            var _data = await _appDbContext.Subjects.ToListAsync();
+            var _data = await _appDbContext.Subjects.Include(n => n.Exercises).ToListAsync();
             return _data;
 
         }
+
+        //            var _data = await _appDbContext.Subjects.Include(n => n.Exercises).ToListAsync();
+
 
         public async Task<Subject> GetByIdAsync(int id)
         {
@@ -72,17 +74,14 @@ namespace codechemist.Data.Services
         public async Task<Subject> UpdateByIdAsync(int id, SubjectVM data)
         {
             var _data = await _appDbContext.Subjects.FirstOrDefaultAsync(i => i.Id == id);
-            var resultPhoto = await _photoRepository.AddAudioAsync(data.Content);
+            var file = await _fIleRepository.UploadVideo(data.Content);
 
-            if (!string.IsNullOrEmpty(_data.PublicId))
-            {
-                await _photoRepository.DeletePhotoAsync(_data.PublicId);
-            }
+
 
             if (_data != null)
             {
                 _data.Title = data.Title;
-                _data.Content = resultPhoto.Url.ToString();
+                _data.Content = file.ToString();
                 _data.LessonId = data.LessonId;
 
                 await _appDbContext.SaveChangesAsync();

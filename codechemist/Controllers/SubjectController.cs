@@ -38,6 +38,7 @@ namespace codechemist.Controllers
 
 
         [HttpPost]
+        [RequestSizeLimit(512 * 1024 * 1024)]
         public async Task<IActionResult> AddASync([FromForm] SubjectVM data)
         {
 
@@ -50,6 +51,7 @@ namespace codechemist.Controllers
 
 
         [HttpPut("{id}")]
+        [RequestSizeLimit(512 * 1024 * 1024)]
 
         public async Task<IActionResult> UpdateByIdAsync(int id, [FromForm][FromBody] SubjectVM data)
         {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using codechemist.Data.Entities;
+using System;
 
 namespace codechemist.Data
 {
@@ -24,11 +25,14 @@ namespace codechemist.Data
                 new IdentityRole { Name = "Member", NormalizedName = "MEMBER" },
                 new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" }
                 );
+
+
             base.OnModelCreating(modelBuilder);
 
         }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Technology> Technologys { get; set; }
+        public DbSet<Exercise> Exercises { get; set; }
     }
 }

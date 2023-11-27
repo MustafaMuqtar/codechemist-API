@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace codechemist.Migrations
 {
     /// <inheritdoc />
-    public partial class connectedToCloudDB : Migration
+    public partial class redoneALlmig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,8 +59,7 @@ namespace codechemist.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PublicId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -180,7 +179,6 @@ namespace codechemist.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PublicId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TechnologyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -202,7 +200,6 @@ namespace codechemist.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PublicId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LessonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -216,13 +213,34 @@ namespace codechemist.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Exercises",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PDF = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubjectId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exercises", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Exercises_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1f02824c-b910-4ab6-a466-c434639c4556", null, "Admin", "ADMIN" },
-                    { "26591446-65b2-437f-9333-c08808bda4d0", null, "Member", "MEMBER" }
+                    { "4d8772c1-0dc9-48e2-b377-1847aeb658b9", null, "Member", "MEMBER" },
+                    { "b4414ba1-0602-4bb9-9d21-36c07e85ec9d", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -265,6 +283,12 @@ namespace codechemist.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Exercises_SubjectId",
+                table: "Exercises",
+                column: "SubjectId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Lessons_TechnologyId",
                 table: "Lessons",
                 column: "TechnologyId");
@@ -294,13 +318,16 @@ namespace codechemist.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Subjects");
+                name: "Exercises");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "Lessons");

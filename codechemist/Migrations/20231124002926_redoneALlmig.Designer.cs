@@ -12,8 +12,8 @@ using codechemist.Data;
 namespace codechemist.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231109060305_connectedToCloudDB")]
-    partial class connectedToCloudDB
+    [Migration("20231124002926_redoneALlmig")]
+    partial class redoneALlmig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,13 @@ namespace codechemist.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "26591446-65b2-437f-9333-c08808bda4d0",
+                            Id = "4d8772c1-0dc9-48e2-b377-1847aeb658b9",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "1f02824c-b910-4ab6-a466-c434639c4556",
+                            Id = "b4414ba1-0602-4bb9-9d21-36c07e85ec9d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -237,7 +237,7 @@ namespace codechemist.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("codechemist.Models.Lesson", b =>
+            modelBuilder.Entity("codechemist.Models.Exercise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,8 +245,32 @@ namespace codechemist.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("PublicId")
+                    b.Property<string>("PDF")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubjectId")
+                        .IsUnique();
+
+                    b.ToTable("Exercises");
+                });
+
+            modelBuilder.Entity("codechemist.Models.Lesson", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("TechnologyId")
                         .HasColumnType("int");
@@ -277,9 +301,6 @@ namespace codechemist.Migrations
                     b.Property<int>("LessonId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PublicId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -301,9 +322,6 @@ namespace codechemist.Migrations
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -366,6 +384,17 @@ namespace codechemist.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("codechemist.Models.Exercise", b =>
+                {
+                    b.HasOne("codechemist.Models.Subject", "Subject")
+                        .WithOne("Exercises")
+                        .HasForeignKey("codechemist.Models.Exercise", "SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+                });
+
             modelBuilder.Entity("codechemist.Models.Lesson", b =>
                 {
                     b.HasOne("codechemist.Models.Technology", "Technology")
@@ -391,6 +420,12 @@ namespace codechemist.Migrations
             modelBuilder.Entity("codechemist.Models.Lesson", b =>
                 {
                     b.Navigation("Subjects");
+                });
+
+            modelBuilder.Entity("codechemist.Models.Subject", b =>
+                {
+                    b.Navigation("Exercises")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("codechemist.Models.Technology", b =>

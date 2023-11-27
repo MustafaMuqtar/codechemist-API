@@ -3,6 +3,7 @@ using codechemist.Data.RequestHelpers;
 using codechemist.Models;
 using codechemist.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace codechemist.Data.Services
 {
@@ -10,28 +11,28 @@ namespace codechemist.Data.Services
     {
 
         private readonly AppDbContext _appDbContext;
-        private readonly IPhotoRepository _photoRepository;
+        private readonly IFIleRepository _fIleRepository;
 
-        public TechnologyService(AppDbContext appDbContext, IPhotoRepository photoRepository)
+        public TechnologyService(AppDbContext appDbContext, IFIleRepository fIleRepository)
         {
             _appDbContext = appDbContext;
-            _photoRepository = photoRepository;
+            _fIleRepository = fIleRepository;
 
         }
 
         public async Task AddAsync(TechnologyVM data)
         {
-            var resultPhoto = await _photoRepository.AddPhotoAsync(data.Image);
+            var file = await _fIleRepository.UploadImage(data.Image);
 
             var _data = new Technology()
             {
                 Title = data.Title,
-                Image = resultPhoto.Url.ToString(),
+                Image = file.ToString(),
 
 
 
             };
-            _data.PublicId = resultPhoto.PublicId;
+
             await _appDbContext.Technologys.AddAsync(_data);
             await _appDbContext.SaveChangesAsync();
 
@@ -41,15 +42,15 @@ namespace codechemist.Data.Services
 
         public async Task DeleteByIdAsync(int id)
         {
+            string directory = "/Uploads/Images/";
+
             var _data = await _appDbContext.Technologys.FirstOrDefaultAsync(i => i.Id == id);
+            _fIleRepository.RemoveFile(_data.Image, directory);
 
             if (_data != null)
             {
 
-                if (!string.IsNullOrEmpty(_data.PublicId))
-                {
-                    await _photoRepository.DeletePhotoAsync(_data.PublicId);
-                }
+
                 _appDbContext.Technologys.Remove(_data);
                 await _appDbContext.SaveChangesAsync();
 
@@ -74,10 +75,18 @@ namespace codechemist.Data.Services
                         {
                             Id = n.Id,
                             Title = n.Title,
-                            Content = n.Content
+                            Content = n.Content,
+                            SubjectsExercises = n.Exercises
+
+
+
+
                         }).ToList()
+
                     }).ToList()
                 }).ToListAsync();
+
+
             return _data;
 
         }
@@ -92,12 +101,15 @@ namespace codechemist.Data.Services
                     Image = n.Image,
                     TechnologyLessons = n.Lessons.Select(n => new TechnologyLessonSubjectVM()
                     {
+                        Id = n.Id,
                         Title = n.Title,
                         LessonSubjects = n.Subjects.Select(n => new TechnologySubjectVM()
                         {
                             Id = n.Id,
                             Title = n.Title,
-                            Content = n.Content
+                            Content = n.Content,
+                            SubjectsExercises = n.Exercises
+
                         }).ToList()
                     }).ToList()
                 }).FirstAsync();
@@ -108,18 +120,14 @@ namespace codechemist.Data.Services
         public async Task<Technology> UpdateByIdAsync(int id, TechnologyVM data)
         {
             var _data = await _appDbContext.Technologys.FirstOrDefaultAsync(i => i.Id == id);
-            var resultPhoto = await _photoRepository.AddPhotoAsync(data.Image);
+            var file = await _fIleRepository.UploadImage(data.Image);
 
-            if (!string.IsNullOrEmpty(_data.PublicId))
-            {
-                await _photoRepository.DeletePhotoAsync(_data.PublicId);
-            }
+
 
             if (_data != null)
             {
                 _data.Title = data.Title;
-                _data.Image = resultPhoto.Url.ToString();
-                _data.PublicId = resultPhoto.PublicId;
+                _data.Image = file.ToString();
 
 
 

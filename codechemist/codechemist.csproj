@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Upload\**" />
+    <Content Remove="Upload\**" />
+    <EmbeddedResource Remove="Upload\**" />
+    <None Remove="Upload\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.10.3" />
     <PackageReference Include="CloudinaryDotNet" Version="1.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
@@ -22,7 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Upload\Files\" />
+    <Folder Include="wwwroot\Uploads\Images\" />
+    <Folder Include="wwwroot\Uploads\PDFs\" />
+    <Folder Include="wwwroot\Uploads\VIdeos\" />
   </ItemGroup>
 
 </Project>

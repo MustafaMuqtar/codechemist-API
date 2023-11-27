@@ -30,8 +30,16 @@
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public Exercise SubjectsExercises { get; set; }
+
 
     }
 
+    public class TechnologyExerciseVM
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string PDF { get; set; }
 
+    }
 }

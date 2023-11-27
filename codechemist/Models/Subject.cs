@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using codechemist.Models.ViewModels;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace codechemist.Models
 {
@@ -7,9 +8,9 @@ namespace codechemist.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public string? PublicId { get; set; }
 
 
+        public Exercise Exercises { get; set; }
 
         public int LessonId { get; set; }
         [ForeignKey("LessonId")]
